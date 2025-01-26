@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranjana Lipi to Devanagari Conversion</title>
+
+    <!-- Favicon
+    <link rel="icon" href="images/favicon.png" type="image/png"> -->
+
+
+    <!-- Styles -->
+    <style>
+        body {
+            background-color: #f6f6f6;
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        #uploadForm {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        label {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4EACA5;
+            color: white;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4fc873;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #result p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .logo {
+            max-width: 200px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ranjana Lipi to Devanagari Conversion</h1>
+
+    <!-- Logo Section (Optional)
+    <img src="favicon.ico" alt="Logo" class="logo"> -->
+
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="model">Select Model:</label>
+        <select id="model" name="model" required>
+            <option value="lenet5">LeNet-5</option>
+            <option value="ran2dev">Ran2Dev</option>
+        </select>
+        <br><br>
+        <label for="image">Upload an Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <br><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="result">
+        <p><strong>Prediction:</strong> <span id="prediction"></span></p>
+        <p><strong>Confidence:</strong> <span id="confidence"></span></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const predictionElem = document.getElementById('prediction');
+        const confidenceElem = document.getElementById('confidence');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.error) {
+                alert(result.error);
+            } else {
+                predictionElem.textContent = result.prediction;
+                confidenceElem.textContent = result.confidence;
+            }
+        });
+    </script>
+</body>
+</html>
